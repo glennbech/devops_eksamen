@@ -1,31 +1,31 @@
 services:
-  - docker
+- docker
 env:
   global:
-    - GCP_PROJECT_ID=devopsexam-295612
-    - IMAGE=eu.gcr.io/devopsexam-295612/devops_exam
-    - CLOUD_RUN_SERVICE=devopseksamen
-    - CLOUD_RUN_REGION=us-central1
-    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
-    - secure: XbxVPt/E9Sm9fPnIIgwsYbHWwxDq8baNdKgoh5Sofn0ox7TIJW0l885gONcl7jVhSg25ASBdjO0ev3q7GBfO+eijnjbXpnMauwokWifu1n2RYEHl0RZ7ZHEb5rrAkbPIGbvH+O4yRsw3azTNQLDhUoW4NWpDv7RvWwsMVGI/+4dtRWPs3B2/6zAKFt2OMei4NWPEABxc6Q4HKZgz3rOH41KWhVUSfLawLwzN1qZ1cyQLSt06pyDw8th/5EfIqVSfct81OQLcwNbxbQh4T7M1KO4xKesVbnvEsIdAcu6K89fX9PBSAPx4d6FB8n2+9Gk1Usx8Q/YZ4q6kmWsTi3DUQTkoZJ+1OqcqzLPsV47swpSYoqyxuk6XFq54vXLN2ewRNf0qBqpg1nEzPsBnVUrbxgmQmqbt7VkkVP0tKP7J3CQeXvup+MdqtvZRy8FK35rjCQB1XlQf1hgxLW4tCvv41Q1+/Q4ZproXrUOVbkUozdEBpHvefL90YWgPFCdfGEG0EPVrWS+oubjutWIM8KXAkOegpVRPSXIwCInQvZGLlQYEw1v7AH/QIa8B0ENiDsyXqEuHdYNkSHdp8k+xCB6eL27miXJoigvMTcRkgeB56DN0G0vEdlnf8p6VJzKI2YBX4RXRgx8xCja1qYJ4MgKd7qqSQkpGPkwVjb7Is62yuSs=
+  - GCP_PROJECT_ID=devopsexam-295612
+  - IMAGE=eu.gcr.io/devopsexam-295612/devops_exam
+  - CLOUD_RUN_SERVICE=devopseksamen
+  - CLOUD_RUN_REGION=us-central1
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  - secure: XbxVPt/E9Sm9fPnIIgwsYbHWwxDq8baNdKgoh5Sofn0ox7TIJW0l885gONcl7jVhSg25ASBdjO0ev3q7GBfO+eijnjbXpnMauwokWifu1n2RYEHl0RZ7ZHEb5rrAkbPIGbvH+O4yRsw3azTNQLDhUoW4NWpDv7RvWwsMVGI/+4dtRWPs3B2/6zAKFt2OMei4NWPEABxc6Q4HKZgz3rOH41KWhVUSfLawLwzN1qZ1cyQLSt06pyDw8th/5EfIqVSfct81OQLcwNbxbQh4T7M1KO4xKesVbnvEsIdAcu6K89fX9PBSAPx4d6FB8n2+9Gk1Usx8Q/YZ4q6kmWsTi3DUQTkoZJ+1OqcqzLPsV47swpSYoqyxuk6XFq54vXLN2ewRNf0qBqpg1nEzPsBnVUrbxgmQmqbt7VkkVP0tKP7J3CQeXvup+MdqtvZRy8FK35rjCQB1XlQf1hgxLW4tCvv41Q1+/Q4ZproXrUOVbkUozdEBpHvefL90YWgPFCdfGEG0EPVrWS+oubjutWIM8KXAkOegpVRPSXIwCInQvZGLlQYEw1v7AH/QIa8B0ENiDsyXqEuHdYNkSHdp8k+xCB6eL27miXJoigvMTcRkgeB56DN0G0vEdlnf8p6VJzKI2YBX4RXRgx8xCja1qYJ4MgKd7qqSQkpGPkwVjb7Is62yuSs=
 before_install:
-  - openssl aes-256-cbc -K $encrypted_98d237b7dbf4_key -iv $encrypted_98d237b7dbf4_iv
-    -in google-key.json.enc -out google-key.json -d
-  - curl https://sdk.cloud.google.com | bash > /dev/null
-  - source "$HOME/google-cloud-sdk/path.bash.inc"
-  - gcloud auth activate-service-account --key-file=google-key.json
-  - gcloud auth configure-docker
-  - gcloud config set project "${GCP_PROJECT_ID}"
-  - gcloud components install beta
+- openssl aes-256-cbc -K $encrypted_98d237b7dbf4_key -iv $encrypted_98d237b7dbf4_iv
+  -in google-key.json.enc -out google-key.json -d
+- curl https://sdk.cloud.google.com | bash > /dev/null
+- source "$HOME/google-cloud-sdk/path.bash.inc"
+- gcloud auth activate-service-account --key-file=google-key.json
+- gcloud auth configure-docker
+- gcloud config set project "${GCP_PROJECT_ID}"
+- gcloud components install beta
 install: true
 script:
-  - |-
-    set -ex;
-    docker build -t "${IMAGE}:${TRAVIS_COMMIT}" . && \
-    docker push "${IMAGE}:${TRAVIS_COMMIT}" && \
-    gcloud beta run deploy "${CLOUD_RUN_SERVICE}" \
-      --image="${IMAGE}:${TRAVIS_COMMIT}" \
-      --platform=managed \
-      --region="${CLOUD_RUN_REGION}" \
-      --allow-unauthenticated;
-    set +x
+- |-
+  set -ex;
+  docker build -t "${IMAGE}:${TRAVIS_COMMIT}" . && \
+  docker push "${IMAGE}:${TRAVIS_COMMIT}" && \
+  gcloud beta run deploy "${CLOUD_RUN_SERVICE}" \
+    --image="${IMAGE}:${TRAVIS_COMMIT}" \
+    --platform=managed \
+    --region="${CLOUD_RUN_REGION}" \
+    --allow-unauthenticated;
+  set +x
