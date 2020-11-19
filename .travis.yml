@@ -4,8 +4,6 @@ env:
   global:
   - GCP_PROJECT_ID=examinfrastructure-295710
   - IMAGE=us.gcr.io/examinfrastructure-295710/devops_eksamen_infrastructure/devopsexaminfrastructure
-  - CLOUD_RUN_SERVICE=devopseksamen
-  - CLOUD_RUN_REGION=us-central1
   - CLOUDSDK_CORE_DISABLE_PROMPTS=1
   - secure: uPbFRnHGoMTVORMi+323XuwuOYKty098yBgLqXstsYat0mSU5jBJ8yX4vopc4i4QCKJHzlfKihzCis/DEro49rnDvGgTe3dGDFZsZQT7gnBJsLbo7FdL5yFlrC/4A5B2m2AuNCjXxBZTzyK8siDdArfA9/NFTTh4Qe7Jqv0KZ6DnMB5G9sZG3TSvH2n7ZBY0KPMKyfVrtr3ABARtuBjsUek51zti2MWhKeoDb8fGUUZLdQMDuvSIlrpDIW71U+VCfc18LUVw+O9k3yxHXbeIISA6YMc8XOp4Y8cZr4RjM2XTJ1VEoJqsYKEUhiNDAwgl4HPXVN2vzgxtXVlVBLdA7mv0L0GxqM2U9PSm7krqJ/bjunV2Lb4CeHYJf0u4yNMwXq9/QtKphcPq3ZxKB0eNEcMsf6HhOHLiFDUmZFsrzq+3mQ6uQV7XxQ6o3cg+6mMdHsf0Yt33faqaRtHNGZHWvXb5k3cKg3Qloqdi44h6tnmOIwL4npthSzaALHxCgR36uEVJ+r7SFfelC3uWWJFYKGK4ngVjCHlwdEQaOYsHPkOKoPrh/3zneG0sLxqOp3lHi+nqGqA1u4uaF/w3c5eKq7KFjPmwCovbELGCn0WJ6bzPb5GCSltvovGekkmLT10JMB3MtLMsOTvLpxqJT+QSjKATS6SQLhCJfRboR7eHeic=
   - secure: HAbY17eGY+6C3NnlT7deBQ4JItOON7uLoz92ZfJ4Lr9GvXoR/sQYuVFPo3gVrJS+7UGJBEwGdIHN4hpZbknftNnjpumMjvDirnl0/hCFFnV9bmOljuq5sFH7nAuGfgV7dZKvzUgS4ponrGMdx6uWtKDbcP27vLZwDnE8664OZB4eft2V6ccmaQv14aGdYWZsWevdGj1hIN0snyKQUzQSL63xWtUAyMQeLYTaEEvKRGufVXzf1hppOfqpckm6O5us77CwuZphwO60eQZsUaG8V0PJnjHXn7NpcvnnISFfpNm1eHD+GmniJWOErTzZhNYgoor/OiTu1fgWZU2nSc8h4Gsz8AY8yCPTViVrVkl3VofQhGaZ2n/Fj8djmU21ohlDd3ZxsVh36n4co0eH5V5bp4Typ52o6R1CVSox8+uSQMBkJ5DPs3Udf2s+zzPZbmcjHR5Exgzt4xXozTqh7HZCk+yPOZQJLFWGCw/7HWAqZZ3ZWlb6qnxMIPwQGe3E0lKPJCgvSLYivTNmg3FALIoLIqVJdT+oaSwHjzfscvRAO8rw09CSDCCztv79HreeBuI8OH63g4J07XOshbFHOpVRF0+lGSS/mAiu7DlbD7dXoTx/KT9wyXN2uqWosDS5OO80z55qfGt/71TRUl8Lafdkg6uUunxOzAKaPgpIdIWzRJk=
@@ -17,16 +15,10 @@ before_install:
 - gcloud auth activate-service-account --key-file=google-key.json
 - gcloud auth configure-docker
 - gcloud config set project "${GCP_PROJECT_ID}"
-- gcloud components install beta
 install: true
 script:
 - |-
   set -ex;
   docker build -t "${IMAGE}:${TRAVIS_COMMIT}" . && \
   docker push "${IMAGE}:${TRAVIS_COMMIT}" && \
-  gcloud beta run deploy "${CLOUD_RUN_SERVICE}" \
-    --image="${IMAGE}:${TRAVIS_COMMIT}" \
-    --platform=managed \
-    --region="${CLOUD_RUN_REGION}" \
-    --allow-unauthenticated;
   set +x
