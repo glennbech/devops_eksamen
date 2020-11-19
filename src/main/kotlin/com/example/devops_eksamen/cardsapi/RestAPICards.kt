@@ -44,7 +44,7 @@ class RestAPI(
         val user = userService.findByIdEager(userId)
         if(user == null){
             logger.info("User not found")
-            return ResponseEntity.status(404).body(WrappedResponse<GameDto>(404, message = "Card $userId not found"))
+            return ResponseEntity.status(404).body(WrappedResponse<GameDto>(404, message = "Card $userId not found."))
         }
         logger.error("Loaded user")
         return ResponseEntity.status(200).body(WrappedResponse(200, data = DtoConverter.transform(user)).validated())
