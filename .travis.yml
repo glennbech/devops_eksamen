@@ -3,7 +3,7 @@ services:
 env:
   global:
   - GCP_PROJECT_ID=examinfrastructure-295710
-  - IMAGE=us.gcr.io/examinfrastructure-295710/devops_eksamen_infrastructure/devopsexaminfrastructure@sha256:2b180488fa02f2fada630b782dfdadbaf6efd9ac81a1ba59ff0d2b206e170407
+  - IMAGE=us.gcr.io/examinfrastructure-295710/devops_eksamen_infrastructure/devopsexaminfrastructure
   - CLOUD_RUN_SERVICE=devopseksamen
   - CLOUD_RUN_REGION=us-central1
   - CLOUDSDK_CORE_DISABLE_PROMPTS=1
