@@ -9,6 +9,8 @@ import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.slf4j.LoggerFactory
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -26,6 +28,7 @@ class RestAPI(
 ) {
 
     private var meterRegistry: MeterRegistry? = null
+    private val logger = LoggerFactory.getLogger(RestAPI::class.java.name)
 
     @Autowired
     fun BankAccountController(meterRegistry: MeterRegistry?) {
@@ -40,9 +43,10 @@ class RestAPI(
 
         val user = userService.findByIdEager(userId)
         if(user == null){
+            logger.info("User not found")
             return ResponseEntity.status(404).body(WrappedResponse<GameDto>(404, message = "Card $userId not found"))
         }
-
+        logger.error("Loaded user")
         return ResponseEntity.status(200).body(WrappedResponse(200, data = DtoConverter.transform(user)).validated())
     }
 
@@ -66,10 +70,6 @@ class RestAPI(
         println(userAmount)
     }
 
-
-
-
-
     @ApiOperation("Create a new user, with the given id")
     @PostMapping(path = ["/{userId}"])
     fun createUser(
@@ -77,10 +77,11 @@ class RestAPI(
     ): ResponseEntity<WrappedResponse<Void>> {
         val ok = userService.createCard(userId)
         if(!ok) {
+            logger.error("User already exists")
             return ResponseEntity.status(400).body(WrappedResponse<Void>(code = 400, message = "User already exists").validated())
         }
         else {
-            //addMember()
+            logger.info("Added user")
             ++userAmount
             return ResponseEntity.status(201).body(WrappedResponse<Void>(201).validated())
 
