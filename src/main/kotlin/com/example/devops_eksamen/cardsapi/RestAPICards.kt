@@ -28,7 +28,7 @@ class RestAPI(
 ) {
 
     private var meterRegistry: MeterRegistry? = null
-    private val logger = LoggerFactory.getLogger(RestAPI::class.java.name)
+    private val logger = LoggerFactory.getLogger(RestAPI::class.java)
 
     @Autowired
     fun BankAccountController(meterRegistry: MeterRegistry?) {
