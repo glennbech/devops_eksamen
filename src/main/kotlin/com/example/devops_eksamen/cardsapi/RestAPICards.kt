@@ -4,6 +4,8 @@ import com.example.devops_eksamen.DtoConverter
 import com.example.devops_eksamen.WrappedResponse
 import com.example.devops_eksamen.cards.GameDto
 import com.example.devops_eksamen.db.CardService
+import io.micrometer.core.annotation.Timed
+import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.DistributionSummary
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
@@ -24,10 +26,11 @@ import org.springframework.web.bind.annotation.*
 )
 @RestController
 class RestAPI(
-        private val userService: CardService
+        private val userService: CardService,
+        @Autowired
+        private var meterRegistry: MeterRegistry? = null
 ) {
 
-    private var meterRegistry: MeterRegistry? = null
     private val logger = LoggerFactory.getLogger(RestAPI::class.java)
 
     @Autowired
@@ -35,6 +38,7 @@ class RestAPI(
         this.meterRegistry = meterRegistry
     }
 
+    @Timed("GetUserTimer")
     @ApiOperation("Retrieve card collection information for a specific user")
     @GetMapping(path = ["/{userId}"])
     fun getUserInfo(
@@ -52,24 +56,15 @@ class RestAPI(
 
 
     var userAmount = 0
+    @Timed("UpdateInfoTimer")
     @PostMapping(path = ["/updateInfo"], consumes = ["application/json"], produces = ["application/json"])
     fun addMember() {
-        //meterRegistry!!.counter("txcount2", "currency", tx.getCurrency()).increment()
+
         meterRegistry!!.gauge("UserAmount", userAmount)
         meterRegistry!!.counter("UserAmountCounter", "Amount", userAmount.toString()).increment()
-        DistributionSummary.builder("my.ratio")
-                .scale(100.0)
-                .sla(70, 80, 90)
-                .register(meterRegistry!!)
-        val timer: Timer = Timer
-                .builder("my.timer")
-                .description("a description of what this timer does") // optional
-                .tags("region", "test") // optional
-                .register(meterRegistry!!)
-
-        println(userAmount)
     }
 
+    @Timed("CreateUserTimer")
     @ApiOperation("Create a new user, with the given id")
     @PostMapping(path = ["/{userId}"])
     fun createUser(
