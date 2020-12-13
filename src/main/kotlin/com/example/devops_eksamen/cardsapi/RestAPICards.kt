@@ -6,7 +6,6 @@ import com.example.devops_eksamen.cards.GameDto
 import com.example.devops_eksamen.db.CardService
 import io.micrometer.core.annotation.Timed
 import io.micrometer.core.instrument.Counter
-import io.micrometer.core.instrument.DistributionSummary
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import io.swagger.annotations.Api
